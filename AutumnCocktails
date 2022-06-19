@@ -1,0 +1,65 @@
+package Advanced.Exams;
+
+import java.util.*;
+
+public class AutumnCocktails {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        ArrayDeque<Integer> ingredients = new ArrayDeque<>();
+        ArrayDeque<Integer> freshness = new ArrayDeque<>();
+        Map<String, Integer> recipes = new TreeMap<>();
+        recipes.put("Pear Sour", 0);
+        recipes.put("The Harvest", 0);
+        recipes.put("Apple Hinny", 0);
+        recipes.put("High Fashion", 0);
+
+        Arrays.stream(scanner.nextLine().split("\\s+")).mapToInt(Integer::parseInt).forEach(ingredients::offer);
+        Arrays.stream(scanner.nextLine().split("\\s+")).mapToInt(Integer::parseInt).forEach(freshness::push);
+
+        while (!(freshness.isEmpty() || ingredients.isEmpty())) {
+
+            int currIngred = ingredients.poll();
+            int currFresh = freshness.pop();
+            if (currIngred == 0) {
+                freshness.push(currFresh);
+                continue;
+            }
+
+            if ((currFresh*currIngred) == 150) {
+                recipes.put("Pear Sour", recipes.get("Pear Sour") + 1);
+            } else if ((currFresh*currIngred) == 250) {
+                recipes.put("The Harvest", recipes.get("The Harvest") + 1);
+            } else if ((currFresh*currIngred) == 300) {
+                recipes.put("Apple Hinny", recipes.get("Apple Hinny") + 1);
+            } else if ((currFresh*currIngred) == 400) {
+                recipes.put("High Fashion", recipes.get("High Fashion") + 1);
+            } else {
+                ingredients.offer(currIngred + 5);
+            }
+
+        }
+        int sum = 0;
+        for (Integer ingredient : ingredients) {
+            sum += ingredient;
+        }
+        if (recipes.get("Pear Sour") >= 1 && recipes.get("The Harvest") >= 1 && recipes.get("Apple Hinny") >= 1 && recipes.get("High Fashion") >= 1) {
+            System.out.printf("It's party time! The cocktails are ready!%n");
+            if (sum != 0) {
+                System.out.printf("Ingredients left: %d%n", sum);
+            }
+            recipes.forEach((key, value) -> System.out.println("# " + key + " --> " + value));
+
+        } else {
+            System.out.printf("What a pity! You didn't manage to prepare all cocktails.%n");
+            if (sum != 0) {
+                System.out.printf("Ingredients left: %d%n", sum);
+            }
+            recipes.forEach((key, value) -> {
+                if (value != 0) {
+                    System.out.println(" # " + key + " --> " + value);
+                }
+            });
+        }
+
+    }
+}
