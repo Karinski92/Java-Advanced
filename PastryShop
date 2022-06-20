@@ -1,0 +1,64 @@
+package Advanced.Exams;
+
+import java.util.*;
+import java.util.stream.Collectors;
+
+public class PastryShop {
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+
+        ArrayDeque<Integer> liquids = new ArrayDeque<>();
+        ArrayDeque<Integer> ingredients = new ArrayDeque<>();
+        Map<Integer, String> recipes = new HashMap<>();
+        recipes.put(25, "Biscuit");
+        recipes.put(50, "Cake");
+        recipes.put(75, "Pastry");
+        recipes.put(100, "Pie");
+
+        Arrays.stream(scanner.nextLine().split("\\s+")).mapToInt(Integer::parseInt).forEach(liquids::offer);
+        Arrays.stream(scanner.nextLine().split("\\s+")).mapToInt(Integer::parseInt).forEach(ingredients::push);
+
+        Map<String, Integer> cooked = new TreeMap<>();
+
+        while (!(liquids.isEmpty() || ingredients.isEmpty())) {
+            int currLiquid = liquids.poll();
+            int currIngredient = ingredients.pop();
+            int sum = currIngredient + currLiquid;
+
+            if (recipes.containsKey(sum)) {
+                String recipe = recipes.get(sum);
+                cooked.putIfAbsent(recipe, 0);
+                cooked.put(recipe, cooked.get(recipe) + 1);
+            } else {
+                ingredients.push(currIngredient + 3);
+            }
+        }
+
+
+        if (cooked.size() < 4) {
+            System.out.printf("What a pity! You didn't have enough materials to cook everything.%n");
+        } else {
+            System.out.printf("Great! You succeeded in cooking all the food!%n");
+        }
+
+        if (liquids.isEmpty()) {
+            System.out.printf("Liquids left: none%n");
+        } else {
+            System.out.println("Liquids left: " + liquids.stream().map(String::valueOf).collect(Collectors.joining(", ")));
+        }
+
+        if (ingredients.isEmpty()) {
+            System.out.printf("Ingredients left: none%n");
+        } else {
+            System.out.println("Ingredients left: " + ingredients.stream().map(String::valueOf).collect(Collectors.joining(", ")));
+        }
+
+        
+            System.out.println("Biscuit: " + cooked.getOrDefault("Biscuit", 0));
+            System.out.println("Cake: " + cooked.getOrDefault("Cake", 0));
+            System.out.println("Pie: " + cooked.getOrDefault("Pie", 0));
+            System.out.println("Pastry: " + cooked.getOrDefault("Pastry", 0));
+            
+    }
+}
