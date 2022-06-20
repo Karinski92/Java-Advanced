@@ -1,0 +1,58 @@
+package Advanced.Exams;
+
+import java.util.*;
+import java.util.stream.Collectors;
+
+public class Blacksmith_2 {
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+
+        ArrayDeque<Integer> steel = new ArrayDeque<>();
+        ArrayDeque<Integer> carbon = new ArrayDeque<>();
+
+        Arrays.stream(scanner.nextLine().split("\\s+")).mapToInt(Integer::parseInt).forEach(steel::offer);
+        Arrays.stream(scanner.nextLine().split("\\s+")).mapToInt(Integer::parseInt).forEach(carbon::push);
+
+        Map<Integer, String> list = new HashMap<>();
+        list.put(70, "Gladius");
+        list.put(80, "Shamshir");
+        list.put(90, "Katana");
+        list.put(110, "Sabre");
+        Map<String, Integer> forged = new TreeMap<>();
+
+        while (!(steel.isEmpty() || carbon.isEmpty())) {
+            int currentSteel = steel.poll();
+            int currentCarbon = carbon.pop();
+            int sum = currentCarbon + currentSteel;
+            if (list.containsKey(sum)) {
+                String forgedSword = list.get(sum);
+                forged.putIfAbsent(forgedSword, 0);
+                forged.put(forgedSword, forged.get(forgedSword) + 1);
+            } else {
+                carbon.push(currentCarbon + 5);
+            }
+        }
+
+        if (forged.isEmpty()) {
+            System.out.printf("You did not have enough resources to forge a sword.%n");
+        } else {
+            System.out.printf("You have forged %d swords.%n", forged.values().stream().reduce(0, Integer::sum));
+        }
+
+        if (steel.isEmpty()) {
+            System.out.println("Steel left: none");
+        } else {
+            System.out.println("Steel left: " + steel.stream().map(String::valueOf).collect(Collectors.joining(", ")));
+        }
+
+        if (carbon.isEmpty()) {
+            System.out.println("Carbon left: none");
+        } else {
+            System.out.println("Carbon left: " + carbon.stream().map(String::valueOf).collect(Collectors.joining(", ")));
+        }
+
+        forged.forEach((key, value) -> System.out.println(key + ": " + value));
+
+    }
+}
