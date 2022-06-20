@@ -1,0 +1,88 @@
+package Advanced.Exams;
+
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.Scanner;
+
+public class PawnWars_2 {
+
+    private static int rowW;
+    private static int colW;
+    private static int rowB;
+    private static int colB;
+    private static final Map<Integer, Character> boardTranslate = new LinkedHashMap<>();
+    private static final Map<Integer, Integer> boardRows = new LinkedHashMap<>();
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        char [][] chessBoard = new char[8][8];
+        boolean hit  = false;
+        boardTranslate.put(0, 'a');
+        boardTranslate.put(1, 'b');
+        boardTranslate.put(2, 'c');
+        boardTranslate.put(3, 'd');
+        boardTranslate.put(4, 'e');
+        boardTranslate.put(5, 'f');
+        boardTranslate.put(6, 'g');
+        boardTranslate.put(7, 'h');
+
+        boardRows.put(0, 8);
+        boardRows.put(1, 7);
+        boardRows.put(2, 6);
+        boardRows.put(3, 5);
+        boardRows.put(4, 4);
+        boardRows.put(5, 3);
+        boardRows.put(6, 2);
+        boardRows.put(7, 1);
+
+        for (int i = 0; i < 8; i++) {
+            String line = scanner.nextLine();
+            chessBoard[i] = line.toCharArray();
+
+            if (line.contains("w")) {
+                rowW = i;
+                colW = line.indexOf("w");
+            } else if (line. contains("b")) {
+                rowB = i;
+                colB = line.indexOf("b");
+            }
+        }
+        if (willHit()) {
+            takeOutcome();
+        } else {
+            queenOutcome();
+        }
+
+
+    }
+    private static boolean willHit () {
+        return Math.abs(colB - colW) == 1 && rowW > rowB;
+    }
+
+    private static void takeOutcome () {
+        int moves = Math.abs(rowW - rowB);
+        if (moves == 1) {
+            System.out.printf("Game over! White capture on %s%d.", boardTranslate.get(colB), 8 - rowB);
+        } else {
+            if (moves % 2 == 0) {
+                int endRow = rowW - (moves / 2);
+                System.out.printf("Game over! Black capture on %s%d.", boardTranslate.get(colW), boardRows.get(endRow));
+            } else {
+                int n = moves / 2;
+                    int endRow = rowW - (n + 1);
+                    System.out.printf("Game over! White capture on %s%d.", boardTranslate.get(colB), boardRows.get(endRow));
+            }
+        }
+    }
+    private static void queenOutcome () {
+        int movesW = Math.abs(- rowW);
+        int movesB = Math.abs(7 - rowB);
+
+        if (movesW <= movesB) {
+            System.out.printf("Game over! White pawn is promoted to a queen at %s8.", boardTranslate.get(colW));
+        } else {
+            System.out.printf("Game over! Black pawn is promoted to a queen at %s1.", boardTranslate.get(colB));
+        }
+    }
+
+}
